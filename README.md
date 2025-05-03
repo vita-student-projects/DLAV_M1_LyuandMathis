@@ -13,11 +13,3 @@ The dataset contains pickle files with the following keys:
 
  	•	Input: (camera image, trajectory history, driving command)
 	•	Output: predicted trajectory of shape (60, 3) → (x, y, heading)
-
-Result
-
-Metric	Value
-Train Loss	~2.6
-Val Loss	~1.77
-ADE	~3.62
-FDE	~8.87
