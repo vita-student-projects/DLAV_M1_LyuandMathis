@@ -1,6 +1,7 @@
 # DLAV_M1_LyuandMathis
 This project implements an EnhancedPlanner model to predict the future trajectory of a self-driving vehicle based on past trajectory, front camera image, and driving command (forward/left/right). The goal is to forecast 60 steps into the future.
-Dataset
+
+##Dataset
 
 The dataset contains pickle files with the following keys:
 	•	camera: RGB front-view image (H, W, 3)
