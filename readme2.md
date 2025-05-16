@@ -11,19 +11,32 @@ The dataset consists of:
 - **Validation set**: Separate examples for evaluation
 - **Test set**: Examples without ground truth trajectories for submissions
 
-Each data sample includes:
-- `camera`: Dash cam image of the current vehicle state
-- `sdc_history_feature`: Past trajectory points (21 time steps, [x, y, heading])
-- `driving_command`: Command instructions ('forward', 'left', 'right')
+The dataset contains pickle files with the following keys:
+- `camera`: RGB front-view image (H, W, 3)
+- `sdc_history_feature`: 21-step historical trajectory, shape (21, 3)
+- `sdc_future_feature`: 60-step future trajectory, shape (60, 3) (not available in test)
+- `driving_command`: one of `['forward', 'left', 'right']`
 - `semantic_label`: Semantic segmentation map (optional)
-- `sdc_future_feature`: Future trajectory points (60 time steps) - not available in test set
+
+
+### Testing
+`sdc_future_feature` is removed from the input and instead the model outputs a prediction for `sdc_future_feature`.
+
+ 	•	Input: (camera image, trajectory history, driving command)
+	•	Output: predicted trajectory of shape (60, 3) → (x, y, heading)
+
+
 
 ### Model Architecture
-The provided baseline model (`EnhancedPlanner`) includes:
-- A CNN-based image encoder to process dash cam images
-- A trajectory history encoder
-- Command embedding module
-- Fully connected layers to output the predicted future trajectory
+(We mostly followed the originally given structure, adding a few elements with the code)
+The provided baseline model (`EnhancedPlanner`) now includes:
+- One-hot encoding for the driving direction
+- Added some complexity to the model :
+  - A 3 layer to the base CNN + batchnorm + average pooling
+  - A history encoder
+  - A command embedding
+  - A bigger decoder with two fully connected layers
+  - Camera input normalizing
 
 ### Training Pipeline
 - **Dataset Class**: Handles data loading and preprocessing
@@ -33,6 +46,7 @@ The provided baseline model (`EnhancedPlanner`) includes:
 ### Evaluation Metrics
 - **ADE (Average Displacement Error)**: Average L2 distance between predicted and ground truth trajectories
 - **FDE (Final Displacement Error)**: L2 distance at the final prediction point
+- **MSE (Mean square error)**: MSE on the final prediction
 
 ## Getting Started
 
@@ -70,9 +84,6 @@ After training, you can generate predictions for the test set and create a submi
 ```python
 # Save your trained model
 torch.save(model.state_dict(), "phase1_model.pth")
-
-# Generate predictions for test set
-# Run the test prediction code to create submission_phase1.csv
 ```
 
 ## Improving the Model
@@ -82,7 +93,6 @@ The baseline model can be improved in many ways:
 - Adding data augmentation techniques
 - Implementing learning rate schedulers
 - Exploring different loss functions
-- Utilizing the semantic segmentation data
 - Increasing model capacity for complex scenarios
 
 ## Visualizing Results
