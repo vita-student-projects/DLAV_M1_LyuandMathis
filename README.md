@@ -27,7 +27,7 @@ Each data sample contains:
 The `DrivingPlanner` model consists of several key components:
 
 1. **Image Encoder**:
-   - Pretrained ResNet50 backbone (with frozen early layers, trainable later layers)
+   - Pretrained mobilenet_v3_small backbone (with frozen early layers, trainable later layers)
    - Custom CNN head with batch normalization and dropout
    - Adaptive average pooling to standardize feature dimensions
 
@@ -45,6 +45,19 @@ The `DrivingPlanner` model consists of several key components:
 5. **Auxiliary Task - Depth Prediction** (optional):
    - Upsampling network for depth map prediction
    - Used as an additional training signal to improve feature learning
+  
+##### Other less successful trials
+
+- We first tried to use our simple milestone 1 model, which did not have the performance we were looking for.
+- We then tried to make it more complex (probably too much !). We implemented :
+	- A pretrained ResNet50 CNN
+	- Both auxiliary tasks with 4-5 layers decoders
+	- extra layers to assemble out inputs in the feature space
+	- a transformer (2 transformer encoder layers)
+  	- a decoder
+  
+This yielded mediocre results and we probably did not implement it quite right. (the code for that is commented out in the notebook)
+Finally we started simple again and added depth and a pretrained CNN, all in a bit of a rush.
 
 ### Data Processing & Augmentation
 
