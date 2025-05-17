@@ -154,7 +154,7 @@ The model achieves strong performance by:
 - Using trajectory smoothness constraints
 - Implementing weighted loss functions for different driving scenarios
 
-Here is the training curve. We see that the model is still learning and that we probably stopped it a bit early ...
+Here is the training curve. We see that the model is still learning and that we probably stopped it a bit early. Nevertheless, we got a minimum ADE of 1.599, only 1.717 on kaggle somehow. 
 
 ![Training Curve](train_curve.png)
 
