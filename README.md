@@ -1,5 +1,8 @@
 # Deep Learning Autonomous Vehicle (DLAV) Path Planning Project
 
+Members : Mathis Finckh & Zheyang Lyu
+Kaggle team name : DLAV_M1_LyuandMathis
+
 # Milestone 2
 (Milestone 1 at the bottom)
 
