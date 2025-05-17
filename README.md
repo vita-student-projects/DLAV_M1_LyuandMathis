@@ -154,6 +154,10 @@ The model achieves strong performance by:
 - Using trajectory smoothness constraints
 - Implementing weighted loss functions for different driving scenarios
 
+Here is the training curve. We see that the model is still learning and that we probably stopped it a bit early ...
+
+![Training Curve](train_curve.png)
+
 ## Visualizing Results
 
 The model output can be visualized by plotting:
