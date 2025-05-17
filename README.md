@@ -189,9 +189,9 @@ The dataset consists of:
 The dataset contains pickle files with the following keys:
 - `camera`: RGB front-view image (H, W, 3)
 - `sdc_history_feature`: 21-step historical trajectory, shape (21, 3)
-- `sdc_future_feature`: 60-step future trajectory, shape (60, 3) (not available in test)
+
 - `driving_command`: one of `['forward', 'left', 'right']`
-- `semantic_label`: Semantic segmentation map (optional)
+
 
 
 ### Testing
