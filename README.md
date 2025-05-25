@@ -41,8 +41,110 @@ Our Phase 3 model is intentionally simple yet effective, consisting of:
    - MLP decoder outputs 60 × (x, y, z) positions
    - Uses ReLU activations and Dropout to regularize training and avoid overfitting
 
+#### Trial and error
 
-   
+Our simple model was chosen after multiple failed attempts (e.g,. ResNet50, EfficientNet_b4).
+Multiple loss terms including:
+	•	Trajectory smoothness
+	•	Jerk minimization (acceleration regularization)
+	•	Heading prediction loss
+
+However, these designs consistently resulted in poor performance (ADE > 2.0), likely due to overfitting and optimization instability.
+After observing that training loss continued to decrease while validation metrics stagnated, we shifted to a much simpler architecture, which proved significantly more effective for this dataset.
+The final model uses:
+	•	Lightweight encoders and decoders
+	•	A compact pretrained backbone (MobileNetV3-Small)
+	•	A single MSE loss on predicted trajectories
+
+This setup achieved much better generalization, with ADE rapidly reaching 1.6. Using a pretrained backbone appears particularly helpful in real-world domains, where visual patterns differ from synthetic data.
+
+### Data Processing & Augmentation
+
+The `DrivingDataset` class implements several augmentation techniques:
+- Random affine transformations (translation, scaling)
+- Color jittering (brightness, contrast, saturation, hue)
+- Horizontally flips both the RGB image and trajectory labels
+- Gaussian noise addition to trajectories
+- Feature augmentation (velocity and acceleration computation)
+
+### Loss Functions
+The training uses a single loss component for simplicity and generalization:
+- MSE trajectory loss for position prediction
+
+No auxiliary loss terms such as heading prediction, jerk smoothness, or depth supervision are used in Phase 3. This minimalistic loss design is aligned with the goal of better generalization to real-world data and avoids overfitting to synthetic signals.
+
+### Training Pipeline
+
+The training process includes:
+- Batch processing with separate train/validation stages
+- Learning rate optimization with Adam optimizer
+- Comprehensive logging of metrics
+- Model checkpointing
+
+### Evaluation Metrics
+
+- **ADE (Average Displacement Error)**: Average L2 distance between predicted and ground truth trajectories
+- **FDE (Final Displacement Error)**: L2 distance at the final prediction point
+- **MSE (Mean Square Error)**: Overall trajectory prediction error
+
+## Getting Started
+
+### Prerequisites
+- Python 3.x
+- PyTorch
+- torchvision
+- NumPy
+- Pandas
+- Matplotlib
+
+### Installation
+1. Clone this repository  
+2. Install required packages:  
+   `pip install torch torchvision numpy pandas matplotlib`
+3. Prepare your data directories: `train/`, `val/`, and `test_public_real/`
+
+### Training
+```python
+# Load and prepare datasets
+train_dataset = DrivingDataset(train_files_mixed)
+val_dataset = DrivingDataset(test_files)
+
+# Create data loaders
+train_loader = DataLoader(train_dataset, batch_size=32, num_workers=2, shuffle=True)
+val_loader = DataLoader(val_dataset, batch_size=32, num_workers=2)
+
+# Initialize model and optimizer
+model = DrivingPlanner()
+optimizer = optim.Adam(model.parameters(), lr=1e-3)
+logger = Logger()
+
+# Train the model
+train(model, train_loader, val_loader, optimizer, logger, num_epochs=100)
+
+# Save trained model
+torch.save(model.state_dict(), "model_phase3_simple2_fine.pth")
+```
+### Testing and Submission Generation
+```python
+# Load test data
+test_dataset = DrivingDataset(test_files, test=True)
+test_loader = DataLoader(test_dataset, batch_size=250, num_workers=num_workers)
+
+# Generate predictions
+model.eval()
+with torch.no_grad():
+    # Get predictions for all test samples
+    # Format results into submission format
+    # Save to CSV
+```
+## Model Performance Highlights
+- **Simplified architecture** (MobileNetV3 + 3-layer MLP) reduced overfitting and improved generalization
+- **Minimal loss function** (MSE on x, y only) avoided reliance on noisy auxiliary signals
+- **Effective data augmentation** (flipping, affine transforms, color jitter, motion feature augmentation)
+- **Pretrained CNN backbone** helped adapt to real-world visual domains
+
+In this simple model we got ADE: 1.607 and 1.428 in kaggle rank.
+
 
 # Milestone 2
 (Milestone 1 at the bottom)
