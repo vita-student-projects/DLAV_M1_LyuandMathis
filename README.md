@@ -144,8 +144,19 @@ with torch.no_grad():
 - **Pretrained CNN backbone** helped adapt to real-world visual domains
 
 In this simple model we got ADE: 1.607 and 1.428 in kaggle rank. Here is curve below.
+
 ![Training Curve](visualization.png)
 
+## Visualizing Results
+The model output can be visualized by plotting:
+- Train loss
+- ADE
+- FDE
+- MSE
+
+## Submission
+
+The final output is a CSV file (`submission_phase3_simple2.csv`) containing the predicted x,y coordinates for each test example, which can be submitted for evaluation.
 
 # Milestone 2
 (Milestone 1 at the bottom)
