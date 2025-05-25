@@ -143,7 +143,8 @@ with torch.no_grad():
 - **Effective data augmentation** (flipping, affine transforms, color jitter, motion feature augmentation)
 - **Pretrained CNN backbone** helped adapt to real-world visual domains
 
-In this simple model we got ADE: 1.607 and 1.428 in kaggle rank.
+In this simple model we got ADE: 1.607 and 1.428 in kaggle rank. Here is curve below.
+
 
 
 # Milestone 2
