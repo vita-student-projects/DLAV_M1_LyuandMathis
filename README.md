@@ -7,7 +7,42 @@ Kaggle team name : DLAV_M1_LyuandMathis
 # Milestone 3
 (Milestone 2 below)
 
+## Overview
+This project implements a deep learning-based trajectory prediction model that forecasts future vehicle positions using front-view images and historical motion data, enabling accurate path planning for autonomous driving.
 
+## Project Structure
+
+### Data
+The dataset consists of:
+- **Train set**: 1000 examples
+- **Validation set**: Separate examples for evaluation
+- **Test set**: Examples without ground truth trajectories for submissions
+
+Each sample includes:
+- `camera`: RGB front-view image (H, W, 3)
+- `sdc_history_feature`: 21-step historical trajectory, shape (21, 3)
+- `driving_command`: one of `['forward', 'left', 'right']`
+
+### Model Architecture
+
+Our Phase 3 model is intentionally simple yet effective, consisting of:
+
+1. **Image Encoder**:
+   - Pretrained MobileNetV3-small backbone (with frozen early layers, trainable later layers)
+   - Custom CNN head with batch normalization and dropout
+   - Adaptive average pooling to standardize feature dimensions
+
+2. **Trajectory History Encoder:
+   - Processes (21, 9) trajectory history (position, velocity, acceleration)
+   - Flattened and passed through 3-layer MLP
+
+3. **Trajectory Decoder:
+   - Concatenates image and trajectory features
+   - MLP decoder outputs 60 × (x, y, z) positions
+   - Uses ReLU activations and Dropout to regularize training and avoid overfitting
+
+
+   
 
 # Milestone 2
 (Milestone 1 at the bottom)
