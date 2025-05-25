@@ -144,7 +144,7 @@ with torch.no_grad():
 - **Pretrained CNN backbone** helped adapt to real-world visual domains
 
 In this simple model we got ADE: 1.607 and 1.428 in kaggle rank. Here is curve below.
-
+![Training Curve](visualization.png)
 
 
 # Milestone 2
